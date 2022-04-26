@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+11_Weak_enhancer_ln -2.52835 0.314453 1.8786

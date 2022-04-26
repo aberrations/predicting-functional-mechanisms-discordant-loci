@@ -1,0 +1,192 @@
+# load libraries ----------------------------------------------------------
+library(caroline)
+
+# load data ----------------------------------------------------------
+STARNET_T2DadjBMI <- read.delim('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results/STARNET/t2dadjbmi_coloc_summary_file.txt')
+STARNET_WHRadjBMI <- read.delim('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results/STARNET/whradjbmi_coloc_summary_file.txt')
+
+GTEx_T2DadjBMI <- read.delim('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results/GTEx/t2dadjbmi_coloc_summary_file.txt')
+GTEx_WHRadjBMI <- read.delim('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results/GTEx/whradjbmi_coloc_summary_file.txt')
+
+METSIM_WHRadjBMI <- read.delim('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results/METSIM/eQTL/whradjbmi_coloc_summary_file.txt')
+METSIM_T2DadjBMI <- read.delim('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results/METSIM/eQTL/t2dadjbmi_coloc_summary_file.txt')
+
+METSIM_WHRadjBMI_sQTL <- read.delim('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results/METSIM/sQTL/whradjbmi_coloc_summary_file.txt')
+METSIM_T2DadjBMI_sQTL <- read.delim('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results/METSIM/sQTL/t2dadjbmi_coloc_summary_file.txt')
+
+# declare functions ----------------------------------------------------------
+find_significant_colocs <- function(coloc_stats){
+  coloc_stats <- subset(coloc_stats, PPH4 > 0.50)
+  column_names <- colnames(coloc_stats)
+  genes_not_in_discordant_loci <- c('ENSG00000126861', 'ENSG00000126860', 'ENSG00000196712', 'EVI2A', 'NF1', 'ENSG00000259928')
+  if ('Gene_ID' %in% column_names) {
+    coloc_stats$Gene_ID <- gsub('\\..*','',coloc_stats$Gene_ID)
+    coloc_stats <- subset(coloc_stats, Tissue_Name != 'MAM' & Tissue_Name != 'AOR' & !(Gene_ID %in% genes_not_in_discordant_loci))
+  }
+  return(coloc_stats)
+}
+
+
+# execute functions ----------------------------------------------------------
+
+# clean data
+STARNET_T2DadjBMI <- find_significant_colocs(STARNET_T2DadjBMI)
+STARNET_WHRadjBMI <- find_significant_colocs(STARNET_WHRadjBMI)
+GTEx_T2DadjBMI <- find_significant_colocs(GTEx_T2DadjBMI)
+GTEx_WHRadjBMI <- find_significant_colocs(GTEx_WHRadjBMI)
+METSIM_WHRadjBMI <- find_significant_colocs(METSIM_WHRadjBMI)
+METSIM_T2DadjBMI <- find_significant_colocs(METSIM_T2DadjBMI)
+METSIM_T2DadjBMI_sQTL <- find_significant_colocs(METSIM_T2DadjBMI_sQTL)
+METSIM_WHRadjBMI_sQTL <- find_significant_colocs(METSIM_WHRadjBMI_sQTL)
+
+# compile results
+METSIM_eQTL_cohorts <- nrow(METSIM_WHRadjBMI)+nrow(METSIM_T2DadjBMI)
+METSIM_sQTL_cohorts <- nrow(METSIM_WHRadjBMI_sQTL)+nrow(METSIM_T2DadjBMI_sQTL)
+METSIM_cohorts <- METSIM_sQTL_cohorts + METSIM_eQTL_cohorts
+STARNET_cohorts <- nrow(STARNET_T2DadjBMI)+nrow(STARNET_WHRadjBMI)
+GTEx_cohorts <- nrow(GTEx_T2DadjBMI)+nrow(GTEx_WHRadjBMI)
+
+summary_figure <- data.frame(Cohort = c(rep('METSIM',METSIM_cohorts),
+                                        rep('STARNET',STARNET_cohorts),
+                                        rep('GTEx',GTEx_cohorts)),
+                             
+                             QTL_type = c(rep('eQTL',METSIM_eQTL_cohorts),
+                                          rep('sQTL',METSIM_sQTL_cohorts),
+                                          rep('eQTL',STARNET_cohorts+GTEx_cohorts)),
+                             
+                             Tissue = c(rep('Subcutaneous Adipose',METSIM_cohorts),
+                                        STARNET_T2DadjBMI$Tissue_Name,
+                                        STARNET_WHRadjBMI$Tissue_Name,
+                                        GTEx_T2DadjBMI$Tissue_Name,
+                                        GTEx_WHRadjBMI$Tissue_Name),
+                             
+                             GENE = c(METSIM_WHRadjBMI$GENE,
+                                      METSIM_T2DadjBMI$GENE,
+                                      METSIM_WHRadjBMI_sQTL$GENE,
+                                      METSIM_T2DadjBMI_sQTL$GENE,
+                                      STARNET_T2DadjBMI$Gene_ID,
+                                      STARNET_WHRadjBMI$Gene_ID,
+                                      GTEx_T2DadjBMI$Gene_ID,
+                                      GTEx_WHRadjBMI$Gene_ID),
+                             
+                             TRAIT = c(rep('WHRadjBMI',nrow(METSIM_WHRadjBMI)),
+                                       rep('T2DadjBMI',nrow(METSIM_T2DadjBMI)),
+                                       rep('WHRadjBMI',nrow(METSIM_WHRadjBMI_sQTL)),
+                                       rep('T2DadjBMI',nrow(METSIM_T2DadjBMI_sQTL)),
+                                       rep('T2DadjBMI',nrow(STARNET_T2DadjBMI)),
+                                       rep('WHRadjBMI',nrow(STARNET_WHRadjBMI)),
+                                       rep('T2DadjBMI',nrow(GTEx_T2DadjBMI)),
+                                       rep('WHRadjBMI',nrow(GTEx_WHRadjBMI))),
+                             
+                             LEAD_VARIANT = c(METSIM_WHRadjBMI$lead_snp,
+                                              METSIM_T2DadjBMI$lead_snp,
+                                              METSIM_WHRadjBMI_sQTL$lead_snp,
+                                              METSIM_T2DadjBMI_sQTL$lead_snp,
+                                              STARNET_T2DadjBMI$lead_snp,
+                                              STARNET_WHRadjBMI$lead_snp,
+                                              GTEx_T2DadjBMI$lead_snp,
+                                              GTEx_WHRadjBMI$lead_snp),
+                             
+                             LEAD_VARIANT_EFFECT = c(METSIM_WHRadjBMI$lead_snp_effect,
+                                              METSIM_T2DadjBMI$lead_snp_effect,
+                                              METSIM_WHRadjBMI_sQTL$lead_snp_effect,
+                                              METSIM_T2DadjBMI_sQTL$lead_snp_effect,
+                                              STARNET_T2DadjBMI$lead_snp_effect,
+                                              STARNET_WHRadjBMI$lead_snp_effect,
+                                              GTEx_T2DadjBMI$lead_snp_effect,
+                                              GTEx_WHRadjBMI$lead_snp_effect),
+                             PPH0 = c(METSIM_WHRadjBMI$PPH0,
+                                      METSIM_T2DadjBMI$PPH0,
+                                      METSIM_WHRadjBMI_sQTL$PPH0,
+                                      METSIM_T2DadjBMI_sQTL$PPH0,
+                                      STARNET_T2DadjBMI$PPH0,
+                                      STARNET_WHRadjBMI$PPH0,
+                                      GTEx_T2DadjBMI$PPH0,
+                                      GTEx_WHRadjBMI$PPH0),
+                             PPH1 = c(METSIM_WHRadjBMI$PPH1,
+                                      METSIM_T2DadjBMI$PPH1,
+                                      METSIM_WHRadjBMI_sQTL$PPH1,
+                                      METSIM_T2DadjBMI_sQTL$PPH1,
+                                      STARNET_T2DadjBMI$PPH1,
+                                      STARNET_WHRadjBMI$PPH1,
+                                      GTEx_T2DadjBMI$PPH1,
+                                      GTEx_WHRadjBMI$PPH1),
+                             PPH2 = c(METSIM_WHRadjBMI$PPH2,
+                                      METSIM_T2DadjBMI$PPH2,
+                                      METSIM_WHRadjBMI_sQTL$PPH2,
+                                      METSIM_T2DadjBMI_sQTL$PPH2,
+                                      STARNET_T2DadjBMI$PPH2,
+                                      STARNET_WHRadjBMI$PPH2,
+                                      GTEx_T2DadjBMI$PPH2,
+                                      GTEx_WHRadjBMI$PPH2),
+                             PPH3 = c(METSIM_WHRadjBMI$PPH3,
+                                      METSIM_T2DadjBMI$PPH3,
+                                      METSIM_WHRadjBMI_sQTL$PPH3,
+                                      METSIM_T2DadjBMI_sQTL$PPH3,
+                                      STARNET_T2DadjBMI$PPH3,
+                                      STARNET_WHRadjBMI$PPH3,
+                                      GTEx_T2DadjBMI$PPH3,
+                                      GTEx_WHRadjBMI$PPH3),
+                             PPH4 = c(METSIM_WHRadjBMI$PPH4,
+                                      METSIM_T2DadjBMI$PPH4,
+                                      METSIM_WHRadjBMI_sQTL$PPH4,
+                                      METSIM_T2DadjBMI_sQTL$PPH4,
+                                      STARNET_T2DadjBMI$PPH4,
+                                      STARNET_WHRadjBMI$PPH4,
+                                      GTEx_T2DadjBMI$PPH4,
+                                      GTEx_WHRadjBMI$PPH4))
+index <- summary_figure$GENE == 'ENSG00000234936' | summary_figure$GENE == 'AC010883' | summary_figure$GENE == 'AC010883.5' 
+summary_figure$GENE[index] <- 'THADA-AS'
+index <- summary_figure$GENE == 'ENSG00000145723'
+summary_figure$GENE[index] <- 'GIN1'
+index <- summary_figure$GENE == 'ENSG00000145730'
+summary_figure$GENE[index] <- 'PAM'
+index <- summary_figure$GENE == 'ENSG00000124302'
+summary_figure$GENE[index] <- 'CHST8'
+index <- summary_figure$GENE == 'ENSG00000124299'
+summary_figure$GENE[index] <- 'PEPD'
+index <- summary_figure$GENE == 'ENSG00000177058'
+summary_figure$GENE[index] <- 'SLC38A9'
+index <- summary_figure$GENE == 'ENSG00000145725'
+summary_figure$GENE[index] <- 'PPIP5K2'
+index <- summary_figure$GENE == 'ENSG00000279873'
+summary_figure$GENE[index] <- 'ZFP36L2-AS'
+index <- summary_figure$GENE == 'ENSG00000175749'
+summary_figure$GENE[index] <- 'EIF3KP1'
+index <- summary_figure$GENE == 'ENSG00000259928'
+summary_figure$GENE[index] <- 'RP11-218M11.1'
+index <- summary_figure$GENE == 'ENSG00000134363'
+summary_figure$GENE[index] <- 'FST'
+index <- summary_figure$GENE == 'ENSG00000152518'
+summary_figure$GENE[index] <- 'ZFP36L2'
+index <- summary_figure$Tissue == 'SUF' | summary_figure$Tissue == 'Adipose_Subcutaneous'
+summary_figure$Tissue[index] <- 'Subcutaneous Adipose'
+index <- summary_figure$Tissue == 'VAF' | summary_figure$Tissue == 'Adipose_Visceral_Omentum'
+summary_figure$Tissue[index] <- 'Visceral Adipose'
+index <- summary_figure$Tissue == 'Muscle_Skeletal' | summary_figure$Tissue == 'SKM'
+summary_figure$Tissue[index] <- 'Skeletal Muscle'
+rm(index)
+setwd('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/gwas_eqtl_colocalization/results')
+write.delim(summary_figure, 'summary_figure.txt')
+setwd('/Users/ya8eb/Documents/Research/colocalization_analysis_whradjbmi_t2dadjbmi/credible_set/formatted_data')
+T2DadjBMI <- read.delim('T2DadjBMI_GWAS_credible.txt')
+WHRadjBMI <- read.delim('WHRadjBMI_GWAS_credible.txt')
+credible_99 <- read.delim('credible_99.txt')
+
+discordant_snps_99 <- subset(WHRadjBMI, sign(BETA) != sign(T2DadjBMI$BETA))$SNP
+discordant_snps_99 <- subset(credible_99, SNP %in% discordant_snps_99)
+index <- sign(discordant_snps_99$WHRadjBMI_BETA) == -1
+discordant_snps_99$WHRadjBMI_BETA[index] <- discordant_snps_99$WHRadjBMI_BETA[index]*-1
+index <- sign(discordant_snps_99$T2DadjBMI_BETA) == 1
+discordant_snps_99$T2DadjBMI_BETA[index] <- discordant_snps_99$T2DadjBMI_BETA[index]*-1
+unique_signals <- unique(discordant_snps_99$COORDINATES)
+representative_snps <- discordant_snps_99[1,]
+for (signal in unique_signals) {
+  signal_credible <- subset(discordant_snps_99, COORDINATES == signal)
+  representative_snp <- which.max(signal_credible$BF)
+  signal_credible <- signal_credible[representative_snp,]
+  representative_snps <- rbind(representative_snps, signal_credible)
+}
+rm(signal_credible,representative_snp,unique_signals,signal,index)
+representative_snps <- representative_snps[-c(1),]
+

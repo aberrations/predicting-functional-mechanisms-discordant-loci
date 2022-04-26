@@ -1,0 +1,11 @@
+ridgeparam: 0.7
+9_Active_enhancer_1 -0.489097
+18_Quiescent_low_signal -0.5755
+17_Weak_repressed_polycomb -0.387891
+14_Bivalent_poised_TSS 0.436081
+3_Flanking_TSS 0.50997
+2_Weak_TSS -0.186387
+1_Active_TSS -0.12932
+16_Repressed_polycomb 0.276701
+11_Weak_enhancer 0.132475
+X-validation penalize ln(lk): 311.164

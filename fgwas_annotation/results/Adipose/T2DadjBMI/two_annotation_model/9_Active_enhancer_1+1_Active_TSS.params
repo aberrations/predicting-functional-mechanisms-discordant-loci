@@ -1,0 +1,3 @@
+parameter CI_lo estimate CI_hi
+9_Active_enhancer_1_ln <-89.5312 -69.5312 0.601571
+1_Active_TSS_ln <-72.7266 -52.7266 2.75744

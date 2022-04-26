@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+6_Weak_transcription_ln -1.07208 0.0722656 1.10158

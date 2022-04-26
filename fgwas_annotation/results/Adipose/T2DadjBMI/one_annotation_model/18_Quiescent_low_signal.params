@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+18_Quiescent_low_signal_ln <-20 -6.70898 0.451705

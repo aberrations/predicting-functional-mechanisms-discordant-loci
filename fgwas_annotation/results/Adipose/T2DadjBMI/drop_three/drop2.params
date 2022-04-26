@@ -1,0 +1,7 @@
+parameter CI_lo estimate CI_hi
+9_Active_enhancer_1_ln <-49.2294 -29.2294 0.590273
+18_Quiescent_low_signal_ln <-20 -1.96865 0.925854
+17_Weak_repressed_polycomb_ln <-156.5 -136.5 fail
+3_Flanking_TSS_ln -1.05779 1.20272 3.17465
+1_Active_TSS_ln <-76.0197 -56.0197 2.68495
+16_Repressed_polycomb_ln -3.82304 96.1634 >116.163

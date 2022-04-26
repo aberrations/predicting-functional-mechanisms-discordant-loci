@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+10_Active_enhancer_2_ln <-20 -0.173828 1.92228

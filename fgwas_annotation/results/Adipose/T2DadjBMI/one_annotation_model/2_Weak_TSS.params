@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+2_Weak_TSS_ln <-81 -61 2.15328

@@ -1,0 +1,31 @@
+ssh -Y ya8eb@rivanna.hpc.virginia.edu
+
+ml gcc/9.2.0 fgwas
+cd /sfs/qumulo/qhome/ya8eb/T2D_BFD_Colocalization/fgwas
+#complete models
+#Adipose
+fgwas -i input_data/Adipose_fGWAS_input.txt -cc -fine -w 18_Quiescent_low_signal+6_Weak_transcription+5_Strong_transcription+2_Weak_TSS+3_Flanking_TSS+1_Active_TSS+11_Weak_enhancer+10_Active_enhancer_2+9_Active_enhancer_1+17_Weak_repressed_polycomb+16_Repressed_polycomb+14_Bivalent_poised_TSS -o output_data/Adipose/Combined/cc/complete_model -print -xv
+
+fgwas -i input_data/Adipose_fGWAS_input.txt -fine -w 18_Quiescent_low_signal+6_Weak_transcription+5_Strong_transcription+2_Weak_TSS+3_Flanking_TSS+1_Active_TSS+11_Weak_enhancer+10_Active_enhancer_2+9_Active_enhancer_1+17_Weak_repressed_polycomb+16_Repressed_polycomb+14_Bivalent_poised_TSS -o output_data/Adipose/Combined/q/complete_model -print -xv
+
+#Islets
+fgwas -i input_data/Islets_fGWAS_input.txt -cc -fine -w 18_Quiescent_low_signal+6_Weak_transcription+5_Strong_transcription+2_Weak_TSS+3_Flanking_TSS+1_Active_TSS+11_Weak_enhancer+10_Active_enhancer_2+9_Active_enhancer_1+17_Weak_repressed_polycomb+16_Repressed_polycomb+14_Bivalent_poised_TSS -o output_data/Islets/Combined/cc/complete_model -print -xv
+
+fgwas -i input_data/Islets_fGWAS_input.txt -fine -w 18_Quiescent_low_signal+6_Weak_transcription+5_Strong_transcription+2_Weak_TSS+3_Flanking_TSS+1_Active_TSS+11_Weak_enhancer+10_Active_enhancer_2+9_Active_enhancer_1+17_Weak_repressed_polycomb+16_Repressed_polycomb+14_Bivalent_poised_TSS -o output_data/Islets/Combined/q/complete_model -print -xv
+
+
+#Liver
+fgwas -i input_data/Liver_fGWAS_input.txt -cc -fine -w 18_Quiescent_low_signal+6_Weak_transcription+5_Strong_transcription+2_Weak_TSS+3_Flanking_TSS+1_Active_TSS+11_Weak_enhancer+10_Active_enhancer_2+9_Active_enhancer_1+17_Weak_repressed_polycomb+16_Repressed_polycomb+14_Bivalent_poised_TSS -o output_data/Liver/Combined/cc/complete_model -print -xv
+
+fgwas -i input_data/Liver_fGWAS_input.txt -fine -w 18_Quiescent_low_signal+6_Weak_transcription+5_Strong_transcription+2_Weak_TSS+3_Flanking_TSS+1_Active_TSS+11_Weak_enhancer+10_Active_enhancer_2+9_Active_enhancer_1+17_Weak_repressed_polycomb+16_Repressed_polycomb+14_Bivalent_poised_TSS -o output_data/Liver/Combined/q/complete_model -print -xv
+
+#SkeletalMuscle
+fgwas -i input_data/SkeletalMuscle_fGWAS_input.txt -cc -fine -w 18_Quiescent_low_signal+6_Weak_transcription+5_Strong_transcription+2_Weak_TSS+3_Flanking_TSS+1_Active_TSS+11_Weak_enhancer+10_Active_enhancer_2+9_Active_enhancer_1+17_Weak_repressed_polycomb+16_Repressed_polycomb+14_Bivalent_poised_TSS -o output_data/SkeletalMuscle/Combined/cc/complete_model -print -xv
+
+fgwas -i input_data/SkeletalMuscle_fGWAS_input.txt -fine -w 18_Quiescent_low_signal+6_Weak_transcription+5_Strong_transcription+2_Weak_TSS+3_Flanking_TSS+1_Active_TSS+11_Weak_enhancer+10_Active_enhancer_2+9_Active_enhancer_1+17_Weak_repressed_polycomb+16_Repressed_polycomb+14_Bivalent_poised_TSS -o output_data/SkeletalMuscle/Combined/q/complete_model -print -xv
+
+#Coding
+fgwas -i input_data/Coding_fGWAS_input.txt -cc -fine -w Coding -o output_data/Coding/Combined/cc/complete_model -print -xv
+
+fgwas -i input_data/Coding_fGWAS_input.txt -fine -w Coding -o output_data/Coding/Combined/q/complete_model -print -xv
+

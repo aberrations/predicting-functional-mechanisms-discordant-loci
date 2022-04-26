@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+Coding_ln <-20 0.0585938 2.01121

@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+3_Flanking_TSS_ln -0.909138 1.41602 3.46607

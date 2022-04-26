@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+14_Bivalent_poised_TSS_ln -1.80656 2.16992 4.90242

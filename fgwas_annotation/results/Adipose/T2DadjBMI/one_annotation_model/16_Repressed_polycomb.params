@@ -1,0 +1,2 @@
+parameter CI_lo estimate CI_hi
+16_Repressed_polycomb_ln -1.91063 34 >54
